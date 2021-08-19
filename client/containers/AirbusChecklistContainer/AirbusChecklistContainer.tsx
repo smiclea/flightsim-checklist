@@ -4,7 +4,6 @@ import {
   Checkbox,
   CircularProgress,
   CircularProgressLabel,
-  Divider,
   Flex, Heading, Spacer, Tab, TabList, TabPanel, TabPanels, Tabs, Text,
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
@@ -34,7 +33,7 @@ export default observer(() => {
   return (
     <Flex direction="column" p={4}>
       <Flex align="center" mb={8}>
-        <Heading>Airbus 320 Checklist</Heading>
+        <Heading>{checklistStore.airbusChecklist.name}</Heading>
         <Spacer />
         <Text fontSize="small">by Sergiu Miclea</Text>
       </Flex>
@@ -86,14 +85,28 @@ export default observer(() => {
                     </Heading>
                     <Flex direction="column" mb={8}>
                       {phase.tasks.map((task, i) => (
-                        checklistTaskIsSeparator(task) ? <Divider key={i} my={2} /> : (
-                          <Checkbox
-                            key={task.id}
-                            isChecked={task.isDone}
-                            onChange={e => handleTaskChange(task, e.target.checked)}
-                            mb={2}
-                          >{task.name}
-                          </Checkbox>
+                        checklistTaskIsSeparator(task) ? <Box height={4} key={i} my={2} /> : (
+                          <Flex key={task.id}>
+                            <Checkbox
+                              key={task.id}
+                              isChecked={task.isDone}
+                              onChange={e => handleTaskChange(task, e.target.checked)}
+                              mb={2}
+                            >{task.name}
+                            </Checkbox>
+                            <Box
+                              backgroundImage="linear-gradient(to right, white 33%, rgba(255,255,255,0) 0%)"
+                              backgroundPosition="bottom"
+                              backgroundSize="3px 1px"
+                              backgroundRepeat="repeat-x"
+                              flexGrow={1}
+                              height="20px"
+                              mx={4}
+                            />
+                            <Flex>
+                              {task.status}
+                            </Flex>
+                          </Flex>
                         )
                       ))}
                     </Flex>
