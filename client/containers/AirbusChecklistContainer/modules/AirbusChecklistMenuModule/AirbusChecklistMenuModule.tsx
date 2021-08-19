@@ -4,7 +4,7 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { Checklist, ChecklistPhase } from '../../../../../models/checklist'
+import { Checklist, ChecklistPhase, checklistTaskIsSeparator } from '../../../../../models/checklist'
 
 type Props = {
   checklist: Checklist
@@ -13,25 +13,30 @@ type Props = {
 
 export default observer(({ checklist, onPhaseClick }: Props) => (
   <Flex direction="column">
-    {checklist.phases.map(phase => (
-      <Flex
-        key={phase.name}
-        align="center"
-        mb={4}
-      >
-        <Button
-          variant="unstyled"
-          pl={2}
-          pr={2}
-          flexGrow={1}
-          textAlign="left"
-          onClick={() => onPhaseClick(phase)}
-        >{phase.name}
-        </Button>
-        <CircularProgress ml={4} value={40} size="32px">
-          <CircularProgressLabel>40%</CircularProgressLabel>
-        </CircularProgress>
-      </Flex>
-    ))}
+    {checklist.phases.map(phase => {
+      const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
+      const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
+      const percentage = (tasksDone / tasksTotal) * 100
+      return (
+        <Flex
+          key={phase.name}
+          align="center"
+          mb={4}
+        >
+          <Button
+            variant="unstyled"
+            pl={2}
+            pr={2}
+            flexGrow={1}
+            textAlign="left"
+            onClick={() => onPhaseClick(phase)}
+          >{phase.name}
+          </Button>
+          <CircularProgress ml={4} value={percentage} size="32px" color={percentage === 100 ? 'green' : undefined}>
+            <CircularProgressLabel>{Math.floor(percentage)}%</CircularProgressLabel>
+          </CircularProgress>
+        </Flex>
+      )
+    })}
   </Flex>
 ))
