@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -15,11 +16,15 @@ export default observer(() => {
   const { checklistStore } = useStores()
 
   const handlePhaseChange = (phase: ChecklistPhase) => {
-    checklistStore.setPhase(phase)
+    checklistStore.setSelectedPhase(phase)
   }
 
   const handleTaskChange = (task: ChecklistTask, isDone: boolean) => {
     checklistStore.setTaskDone(task, isDone)
+  }
+
+  const handleNextPhaseClick = () => {
+    checklistStore.setPhaseToNextPhase()
   }
 
   const areAllTasksForSelectedPhaseDone = checklistStore.selectedPhase.tasks.filter(t => !checklistTaskIsSeparator(t)).length === checklistStore
@@ -40,7 +45,10 @@ export default observer(() => {
           onChange={idx => { handlePhaseChange(checklistStore.airbusChecklist.phases[idx]) }}
           isLazy
         >
-          <TabList minW="290px" position="fixed">
+          <TabList
+            position="fixed"
+            left={[-9999, -9999, 'auto']}
+          >
             {checklistStore.airbusChecklist.phases.map(phase => {
               const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
               const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
@@ -56,49 +64,64 @@ export default observer(() => {
               )
             })}
           </TabList>
-          <TabPanels position="absolute" left="350px" width="auto">
-            <TabPanel pt={0}>
-              <Flex direction="column">
-                <Heading size="md" mb={4}>{checklistStore.selectedPhase.name} Checklist</Heading>
-                <Flex direction="column" mb={8}>
-                  {checklistStore.selectedPhase.tasks.map((task, i) => (
-                    checklistTaskIsSeparator(task) ? <Divider key={i} my={2} /> : (
-                      <Checkbox
-                        key={task.id}
-                        isChecked={task.isDone}
-                        onChange={e => handleTaskChange(task, e.target.checked)}
-                        mb={2}
-                      >{task.name}
-                      </Checkbox>
-                    )
-                  ))}
-                </Flex>
-                {checklistStore.nextPhase ? (
-                  <Button
-                    colorScheme={areAllTasksForSelectedPhaseDone ? 'green' : undefined}
-                  >Next Phase: {checklistStore.nextPhase.name}
-                  </Button>
-                ) : null}
-              </Flex>
-            </TabPanel>
+          <TabPanels
+            position="absolute"
+            left={[0, 0, '300px']}
+            style={{ width: 'auto' }}
+          >
+            {checklistStore.airbusChecklist.phases.map(phase => {
+              const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
+              const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
+              const percentage = (tasksDone / tasksTotal) * 100
+              return (
+                <TabPanel pt={0} key={phase.name}>
+                  <Flex direction="column">
+                    <Heading size="md" mb={4}>
+                      <Box display={['inline', 'inline', 'none']} mr={2}>
+                        <CircularProgress value={percentage} size="32px" color={percentage === 100 ? 'green' : undefined}>
+                          <CircularProgressLabel>{Math.floor(percentage)}%</CircularProgressLabel>
+                        </CircularProgress>
+                      </Box>
+                      {phase.name} Checklist
+                    </Heading>
+                    <Flex direction="column" mb={8}>
+                      {phase.tasks.map((task, i) => (
+                        checklistTaskIsSeparator(task) ? <Divider key={i} my={2} /> : (
+                          <Checkbox
+                            key={task.id}
+                            isChecked={task.isDone}
+                            onChange={e => handleTaskChange(task, e.target.checked)}
+                            mb={2}
+                          >{task.name}
+                          </Checkbox>
+                        )
+                      ))}
+                    </Flex>
+                    {checklistStore.nextPhase ? (
+                      <Flex direction={['column', 'column', 'row']}>
+                        <Button
+                          colorScheme={areAllTasksForSelectedPhaseDone ? 'green' : undefined}
+                          onClick={() => { handleNextPhaseClick() }}
+                        >Next Phase: {checklistStore.nextPhase.name}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          ml={[0, 0, 4]}
+                          mt={[4, 4, 0]}
+                          onClick={() => { checklistStore.toggleTasks(phase, !areAllTasksForSelectedPhaseDone) }}
+                        >{areAllTasksForSelectedPhaseDone ? 'Reset' : 'Mark Done'}
+                        </Button>
+                      </Flex>
+                    ) : (
+                      <Button onClick={() => { checklistStore.resetAll() }}>Reset All</Button>
+                    )}
+                  </Flex>
+                </TabPanel>
+              )
+            })}
           </TabPanels>
         </Tabs>
       </Flex>
-      {/* <Flex>
-        <Flex pr={8}>
-          <AirbusChecklistMenuModule
-            checklist={checklistStore.airbusChecklist}
-            onPhaseClick={handlePhaseClick}
-          />
-        </Flex>
-        <Flex>
-          <AirbusChecklistContentModule
-            phase={checklistStore.selectedPhase}
-            nextPhase={checklistStore.nextPhase}
-            onTaskChange={handleTaskChange}
-          />
-        </Flex>
-      </Flex> */}
     </Flex>
   )
 })
