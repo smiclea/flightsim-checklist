@@ -266,7 +266,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           status: 'OFF',
         },
         {
-          name: 'Radio Controle Panels',
+          name: 'Radio Control Panels',
           status: 'OFF',
         },
       ],
