@@ -6,14 +6,14 @@ import {
 import { airbus320ChecklistData } from '../data/airbus320ChecklistData'
 
 class ChecklistStore {
-  airbusChecklist: Checklist
+  checklist: Checklist
 
   selectedPhase: ChecklistPhase
 
   get nextPhase(): ChecklistPhase | null {
-    const currentPhaseIdx = this.airbusChecklist.phases.findIndex(p => p.name === this.selectedPhase.name)
-    if (currentPhaseIdx > -1 && currentPhaseIdx < this.airbusChecklist.phases.length - 1) {
-      return this.airbusChecklist.phases[currentPhaseIdx + 1]
+    const currentPhaseIdx = this.checklist.phases.findIndex(p => p.name === this.selectedPhase.name)
+    if (currentPhaseIdx > -1 && currentPhaseIdx < this.checklist.phases.length - 1) {
+      return this.checklist.phases[currentPhaseIdx + 1]
     }
     return null
   }
@@ -24,8 +24,8 @@ class ChecklistStore {
       ...airbus320ChecklistData,
       phases: airbus320ChecklistData.phases.map(p => ({ ...p, tasks: p.tasks.map(t => ({ ...t, id: uuid() })) })),
     }
-    this.airbusChecklist = newChecklist
-    this.selectedPhase = this.airbusChecklist.phases[0]
+    this.checklist = newChecklist
+    this.selectedPhase = this.checklist.phases[0]
   }
 
   setSelectedPhase(phase: ChecklistPhase) {
@@ -33,7 +33,7 @@ class ChecklistStore {
   }
 
   setTaskDone(task: ChecklistTask, isDone: boolean) {
-    this.airbusChecklist.phases.forEach(p => p.tasks.forEach(t => {
+    this.checklist.phases.forEach(p => p.tasks.forEach(t => {
       if (!checklistTaskIsSeparator(t) && t.id === task.id) {
         t.isDone = isDone
       }
@@ -55,10 +55,10 @@ class ChecklistStore {
   }
 
   resetAll() {
-    this.airbusChecklist.phases.forEach(phase => {
+    this.checklist.phases.forEach(phase => {
       this.toggleTasks(phase, false)
     })
-    this.selectedPhase = this.airbusChecklist.phases[0]
+    this.selectedPhase = this.checklist.phases[0]
   }
 }
 

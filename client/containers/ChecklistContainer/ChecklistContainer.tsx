@@ -28,12 +28,12 @@ export default observer(() => {
 
   const areAllTasksForSelectedPhaseDone = checklistStore.selectedPhase.tasks.filter(t => !checklistTaskIsSeparator(t)).length === checklistStore
     .selectedPhase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
-  const phaseIndex = checklistStore.airbusChecklist.phases.findIndex(p => p.name === checklistStore.selectedPhase.name)
+  const phaseIndex = checklistStore.checklist.phases.findIndex(p => p.name === checklistStore.selectedPhase.name)
 
   return (
     <Flex direction="column" p={4}>
       <Flex align="center" mb={8}>
-        <Heading>{checklistStore.airbusChecklist.name}</Heading>
+        <Heading>{checklistStore.checklist.name}</Heading>
         <Spacer />
         <Text fontSize="small">by Sergiu Miclea</Text>
       </Flex>
@@ -41,14 +41,14 @@ export default observer(() => {
         <Tabs
           orientation="vertical"
           index={phaseIndex}
-          onChange={idx => { handlePhaseChange(checklistStore.airbusChecklist.phases[idx]) }}
+          onChange={idx => { handlePhaseChange(checklistStore.checklist.phases[idx]) }}
           isLazy
         >
           <TabList
             position="fixed"
             left={[-9999, -9999, 'auto']}
           >
-            {checklistStore.airbusChecklist.phases.map(phase => {
+            {checklistStore.checklist.phases.map(phase => {
               const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
               const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
               const percentage = (tasksDone / tasksTotal) * 100
@@ -68,7 +68,7 @@ export default observer(() => {
             left={[0, 0, '300px']}
             style={{ width: 'auto' }}
           >
-            {checklistStore.airbusChecklist.phases.map(phase => {
+            {checklistStore.checklist.phases.map(phase => {
               const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
               const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
               const percentage = (tasksDone / tasksTotal) * 100
