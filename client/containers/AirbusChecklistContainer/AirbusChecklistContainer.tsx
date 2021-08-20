@@ -92,6 +92,7 @@ export default observer(() => {
                               isChecked={task.isDone}
                               onChange={e => handleTaskChange(task, e.target.checked)}
                               mb={2}
+                              size="lg"
                             >{task.name}
                             </Checkbox>
                             <Box
@@ -119,6 +120,7 @@ export default observer(() => {
                         </Button>
                         <Button
                           variant="ghost"
+                          width="115px"
                           ml={[0, 0, 4]}
                           mt={[4, 4, 0]}
                           onClick={() => { checklistStore.toggleTasks(phase, !areAllTasksForSelectedPhaseDone) }}
