@@ -103,6 +103,7 @@ export default observer(() => {
                               flexGrow={1}
                               height="20px"
                               mx={4}
+                              minW="16px"
                             />
                             <Flex>
                               {task.status}
