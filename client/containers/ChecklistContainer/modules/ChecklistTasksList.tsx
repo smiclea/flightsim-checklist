@@ -12,12 +12,12 @@ export default observer(({ tasks, onTaskChange }: Props) => (
   <Flex direction="column" mb={8}>
     {tasks.map((task, i) => (
       checklistTaskIsSeparator(task) ? <Box height={4} key={i} my={2} /> : (
-        <Flex key={task.id}>
+        <Flex key={task.id} alignItems="flex-end">
           <Checkbox
             key={task.id}
             isChecked={task.isDone}
             onChange={e => onTaskChange(task, e.target.checked)}
-            mb={2}
+            py={4}
             size="lg"
           >{task.name}
           </Checkbox>
@@ -27,11 +27,12 @@ export default observer(({ tasks, onTaskChange }: Props) => (
             backgroundSize="3px 1px"
             backgroundRepeat="repeat-x"
             flexGrow={1}
-            height="20px"
+            height={1}
             mx={4}
+            mb={5}
             minW="16px"
           />
-          <Flex>
+          <Flex mb={4}>
             {task.status}
           </Flex>
         </Flex>
