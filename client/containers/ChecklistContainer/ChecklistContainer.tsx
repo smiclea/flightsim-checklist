@@ -36,7 +36,10 @@ export default observer(() => {
             checklist={checklistStore.checklist}
             nextPhase={checklistStore.nextPhase}
             selectedPhase={checklistStore.selectedPhase}
-            onNextPhaseClick={() => { checklistStore.setPhaseToNextPhase() }}
+            onNextPhaseClick={() => {
+              checklistStore.setPhaseToNextPhase()
+              window.scrollTo(0, 0)
+            }}
             onTaskChange={(task, isChecked) => { checklistStore.setTaskDone(task, isChecked) }}
             onResetAll={() => { checklistStore.resetAll() }}
             onToggleTasks={(phase, areChecked) => { checklistStore.toggleTasks(phase, areChecked) }}
