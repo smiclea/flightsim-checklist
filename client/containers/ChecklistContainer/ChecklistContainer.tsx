@@ -12,15 +12,15 @@ export default observer(() => {
   const { checklistStore } = useStores()
 
   const handlePhaseChange = (phase: ChecklistPhase) => {
-    checklistStore.setSelectedPhase(phase)
+    checklistStore.goToPhase(phase)
   }
 
-  const phaseIndex = checklistStore.checklist.phases.findIndex(p => p.name === checklistStore.selectedPhase.name)
+  const phaseIndex = checklistStore.currentChecklist.phases.findIndex(p => p.name === checklistStore.currentPhase.name)
 
   return (
     <Flex direction="column" p={4}>
       <Flex align="center" mb={8}>
-        <Heading>{checklistStore.checklist.name}</Heading>
+        <Heading>{checklistStore.currentChecklist.name}</Heading>
         <Spacer />
         <Text fontSize="small">by Sergiu Miclea</Text>
       </Flex>
@@ -28,21 +28,21 @@ export default observer(() => {
         <Tabs
           orientation="vertical"
           index={phaseIndex}
-          onChange={idx => { handlePhaseChange(checklistStore.checklist.phases[idx]) }}
+          onChange={idx => { handlePhaseChange(checklistStore.currentChecklist.phases[idx]) }}
           isLazy
         >
-          <ChecklistTablist checklist={checklistStore.checklist} />
+          <ChecklistTablist checklist={checklistStore.currentChecklist} />
           <ChecklistPanels
-            checklist={checklistStore.checklist}
+            checklist={checklistStore.currentChecklist}
             nextPhase={checklistStore.nextPhase}
-            selectedPhase={checklistStore.selectedPhase}
+            selectedPhase={checklistStore.currentPhase}
             onNextPhaseClick={() => {
-              checklistStore.setPhaseToNextPhase()
+              checklistStore.goToNextPhase()
               window.scrollTo(0, 0)
             }}
-            onTaskChange={(task, isChecked) => { checklistStore.setTaskDone(task, isChecked) }}
+            onTaskChange={(task, isChecked) => { checklistStore.toggleTask(task, isChecked) }}
             onResetAll={() => { checklistStore.resetAll() }}
-            onToggleTasks={(phase, areChecked) => { checklistStore.toggleTasks(phase, areChecked) }}
+            onToggleTasks={(phase, areChecked) => { checklistStore.togglePhaseTasks(phase, areChecked) }}
           />
         </Tabs>
       </Flex>

@@ -8,8 +8,9 @@ export type ChecklistTask = {
 
 export type ChecklistSeperator = { isSeparator: true }
 
-export const checklistTaskIsSeparator = (task: ChecklistTask | ChecklistSeperator): task is ChecklistSeperator => (
-  task as ChecklistSeperator).isSeparator !== undefined
+export const checklistTaskIsSeparator = (
+  task: ChecklistTask | ChecklistSeperator,
+): task is ChecklistSeperator => (task as ChecklistSeperator).isSeparator !== undefined
 
 export type ChecklistPhase = {
   name: string
