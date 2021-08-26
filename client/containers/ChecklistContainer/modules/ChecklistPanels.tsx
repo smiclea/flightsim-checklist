@@ -3,9 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import {
-  Checklist, ChecklistPhase, ChecklistTask, checklistTaskIsSeparator,
-} from '../../../../models/checklist'
+import { Checklist, ChecklistPhase, ChecklistTask } from '../../../stores/checklistStore'
 import ChecklistTasksList from './ChecklistTasksList'
 
 type Props = {
@@ -27,8 +25,8 @@ export default observer(({
   onToggleTasks,
   onResetAll,
 }: Props) => {
-  const areAllTasksForSelectedPhaseDone = selectedPhase.tasks.filter(t => !checklistTaskIsSeparator(t)).length === selectedPhase.tasks
-    .filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
+  const areAllTasksForSelectedPhaseDone = selectedPhase.tasks.filter(t => !t.isSeparator).length === selectedPhase.tasks
+    .filter(t => !t.isSeparator && t.isDone).length
 
   return (
     <TabPanels
@@ -37,8 +35,8 @@ export default observer(({
       style={{ width: 'auto' }}
     >
       {checklist.phases.map(phase => {
-        const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
-        const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
+        const tasksTotal = phase.tasks.filter(t => !t.isSeparator).length
+        const tasksDone = phase.tasks.filter(t => !t.isSeparator && t.isDone).length
         const percentage = (tasksDone / tasksTotal) * 100
         return (
           <TabPanel pt={0} key={phase.name}>

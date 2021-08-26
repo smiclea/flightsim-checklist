@@ -3,7 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { Checklist, checklistTaskIsSeparator } from '../../../../models/checklist'
+import { Checklist } from '../../../stores/checklistStore'
 
 type Props = {
   checklist: Checklist
@@ -15,8 +15,8 @@ export default observer(({ checklist }: Props) => (
     left={[-9999, -9999, 'auto']}
   >
     {checklist.phases.map(phase => {
-      const tasksTotal = phase.tasks.filter(t => !checklistTaskIsSeparator(t)).length
-      const tasksDone = phase.tasks.filter(t => !checklistTaskIsSeparator(t) && t.isDone).length
+      const tasksTotal = phase.tasks.filter(t => !t.isSeparator).length
+      const tasksDone = phase.tasks.filter(t => !t.isSeparator && t.isDone).length
       const percentage = (tasksDone / tasksTotal) * 100
       return (
         <Tab justifyContent="start" key={phase.name}>
@@ -29,5 +29,4 @@ export default observer(({ checklist }: Props) => (
       )
     })}
   </TabList>
-
 ))

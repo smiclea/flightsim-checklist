@@ -1,17 +1,17 @@
 import { Checkbox, Flex, Box } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { ChecklistPhase, ChecklistTask, checklistTaskIsSeparator } from '../../../../models/checklist'
+import { ChecklistTask } from '../../../stores/checklistStore'
 
 type Props = {
-  tasks: ChecklistPhase['tasks']
+  tasks: ChecklistTask[]
   onTaskChange: (task: ChecklistTask, isChecked: boolean) => void
 }
 
 export default observer(({ tasks, onTaskChange }: Props) => (
   <Flex direction="column" mb={8}>
-    {tasks.map((task, i) => (
-      checklistTaskIsSeparator(task) ? <Box height={4} key={i} my={2} /> : (
+    {tasks.map(task => (
+      task.isSeparator ? <Box height={4} key={task.id} my={2} /> : (
         <Flex key={task.id} alignItems="flex-end">
           <Checkbox
             key={task.id}

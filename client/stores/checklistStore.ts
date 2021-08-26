@@ -1,14 +1,117 @@
 import { makeAutoObservable } from 'mobx'
 import { v4 as uuid } from 'uuid'
 import {
-  Checklist, ChecklistPhase, ChecklistTask, checklistTaskIsSeparator,
-} from '../../models/checklist'
+  ChecklistRaw,
+  checklistRawTaskIsSeparator,
+} from '../../models/ChecklistRaw'
 import { airbus320ChecklistData } from '../data/airbus320ChecklistData'
 
-class ChecklistStore {
-  currentChecklist: Checklist
+export class ChecklistTask {
+  private _isSeparator = false
 
-  currentPhase: ChecklistPhase
+  get isSeparator() {
+    return this._isSeparator
+  }
+
+  private _id = uuid()
+
+  get id() {
+    return this._id
+  }
+
+  private _name = ''
+
+  get name() {
+    return this._name
+  }
+
+  private _status = ''
+
+  get status() {
+    return this._status
+  }
+
+  private _isDone: boolean | undefined
+
+  get isDone() {
+    return this._isDone || false
+  }
+
+  constructor(rawTask: ChecklistRaw['phases'][0]['tasks'][0]) {
+    makeAutoObservable(this)
+
+    if (checklistRawTaskIsSeparator(rawTask)) {
+      this._isSeparator = true
+    } else {
+      this._name = rawTask.name
+      this._status = rawTask.status
+      this._isDone = rawTask.isDone
+    }
+  }
+
+  toggle(isDone: boolean) {
+    this._isDone = isDone
+  }
+}
+
+export class ChecklistPhase {
+  private _name: string
+
+  get name() {
+    return this._name
+  }
+
+  private _tasks: ChecklistTask[]
+
+  get tasks() {
+    return this._tasks
+  }
+
+  constructor(rawPhase: ChecklistRaw['phases'][0]) {
+    makeAutoObservable(this)
+    this._name = rawPhase.name
+    this._tasks = rawPhase.tasks.map(t => new ChecklistTask(t))
+  }
+
+  toggleTasks(isDone: boolean) {
+    this.tasks.forEach(task => {
+      task.toggle(isDone)
+    })
+  }
+}
+
+export class Checklist {
+  private _name: string
+
+  get name() {
+    return this._name
+  }
+
+  private _phases: ChecklistPhase[]
+
+  get phases() {
+    return this._phases
+  }
+
+  constructor(rawChecklist: ChecklistRaw) {
+    makeAutoObservable(this)
+    this._name = rawChecklist.name
+    this._phases = rawChecklist.phases.map(p => new ChecklistPhase(p))
+  }
+}
+
+class ChecklistStore {
+  private _currentChecklist: Checklist
+
+  get currentChecklist() {
+    return this._currentChecklist
+  }
+
+  private _currentPhase: ChecklistPhase
+
+  get currentPhase() {
+    return this._currentPhase
+  }
 
   get nextPhase(): ChecklistPhase | null {
     const currentPhaseIdx = this.currentChecklist.phases.findIndex(p => p.name === this.currentPhase.name)
@@ -20,45 +123,33 @@ class ChecklistStore {
 
   constructor() {
     makeAutoObservable(this)
-    const newChecklist: Checklist = {
-      ...airbus320ChecklistData,
-      phases: airbus320ChecklistData.phases.map(p => ({ ...p, tasks: p.tasks.map(t => ({ ...t, id: uuid() })) })),
-    }
-    this.currentChecklist = newChecklist
-    this.currentPhase = this.currentChecklist.phases[0]
+    this._currentChecklist = new Checklist(airbus320ChecklistData)
+    this._currentPhase = this.currentChecklist.phases[0]
   }
 
   goToPhase(phase: ChecklistPhase) {
-    this.currentPhase = phase
+    this._currentPhase = phase
   }
 
   toggleTask(task: ChecklistTask, isDone: boolean) {
-    this.currentChecklist.phases.forEach(p => p.tasks.forEach(t => {
-      if (!checklistTaskIsSeparator(t) && t.id === task.id) {
-        t.isDone = isDone
-      }
-    }))
+    task.toggle(isDone)
   }
 
   goToNextPhase() {
     if (this.nextPhase) {
-      this.currentPhase = this.nextPhase
+      this._currentPhase = this.nextPhase
     }
   }
 
-  togglePhaseTasks(phase: ChecklistPhase, done: boolean) {
-    phase.tasks.forEach(task => {
-      if (!checklistTaskIsSeparator(task)) {
-        task.isDone = done
-      }
-    })
+  togglePhaseTasks(phase: ChecklistPhase, isDone: boolean) {
+    phase.toggleTasks(isDone)
   }
 
   resetAll() {
     this.currentChecklist.phases.forEach(phase => {
-      this.togglePhaseTasks(phase, false)
+      phase.toggleTasks(false)
     })
-    this.currentPhase = this.currentChecklist.phases[0]
+    this._currentPhase = this.currentChecklist.phases[0]
   }
 }
 

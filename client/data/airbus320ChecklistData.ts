@@ -1,4 +1,4 @@
-import { ChecklistRaw } from '../../models/checklist'
+import { ChecklistRaw } from '../../models/ChecklistRaw'
 
 export const airbus320ChecklistData: ChecklistRaw = {
   name: 'Airbus 320 Checklist',

@@ -3,7 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { ChecklistPhase } from '../../../models/checklist'
+import { ChecklistPhase } from '../../stores/checklistStore'
 import useStores from '../../stores/useStores'
 import ChecklistPanels from './modules/ChecklistPanels'
 import ChecklistTablist from './modules/ChecklistTablist'
