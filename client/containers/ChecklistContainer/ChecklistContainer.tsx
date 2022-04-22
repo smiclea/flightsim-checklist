@@ -3,6 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { Aircraft } from '../../../models/Aircraft'
 import { ChecklistPhase } from '../../stores/checklistStore'
 import useStores from '../../stores/useStores'
 import ChecklistPanels from './modules/ChecklistPanels'
@@ -10,6 +11,16 @@ import ChecklistTablist from './modules/ChecklistTablist'
 
 export default observer(() => {
   const { checklistStore } = useStores()
+
+  React.useEffect(() => {
+    const airplanePath: string = window.location.pathname.substring(1)
+    let aircraft: Aircraft = 'a320'
+    if (airplanePath === 'b737') {
+      aircraft = 'b737'
+    }
+    checklistStore.loadChecklistFor(aircraft)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handlePhaseChange = (phase: ChecklistPhase) => {
     checklistStore.goToPhase(phase)

@@ -1,5 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router, Switch, Route,
+} from 'react-router-dom'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import ChecklistContainer from './containers/ChecklistContainer/ChecklistContainer'
 
@@ -9,7 +11,7 @@ const App = () => (
   <ChakraProvider resetCSS theme={theme}>
     <Router>
       <Switch>
-        <Route path="/" exact>
+        <Route path="/">
           <ChecklistContainer />
         </Route>
         <Route>404 Not Found</Route>

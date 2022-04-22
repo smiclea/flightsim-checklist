@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-msedge",
+      "request": "attach",
+      "runtimeExecutable": "stable",
+      "name": "attach",
+      "port": 9222,
+      "urlFilter": "http://localhost:3050/*",
+      "webRoot": "${workspaceFolder}"
+    },
+  ]
+}

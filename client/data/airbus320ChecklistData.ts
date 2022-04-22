@@ -22,7 +22,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Brightness',
           status: 'SET',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'Load PAX and Cargo',
           status: 'DONE',
@@ -31,7 +31,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'MCDU Order: INIT, F-PLN, PERF',
           status: 'DONE',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'Fuel Pumps',
           status: 'ON',
@@ -60,7 +60,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Crew Supply',
           status: 'ON',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'Radio Control Panels',
           status: 'ON',
@@ -73,7 +73,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Weather',
           status: 'ON',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'Altimeter',
           status: 'SET',
@@ -90,7 +90,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Altitude',
           status: 'SET',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'External Power',
           status: 'OFF',
@@ -124,7 +124,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Engines',
           status: 'STARTED',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'APU',
           status: 'OFF',
@@ -188,7 +188,7 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Autobrake',
           status: 'SET',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'Seatblets Sign',
           status: 'ON',
@@ -226,12 +226,12 @@ export const airbus320ChecklistData: ChecklistRaw = {
           name: 'Flaps',
           status: 'RETRACTED',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'APU',
           status: 'ON',
         },
-        { isSeparator: true },
+        { separator: '' },
         {
           name: 'Strobe Light',
           status: 'AUTO',

@@ -1,8 +1,8 @@
-export type ChecklistSeperator = { isSeparator: true }
+export type ChecklistSeperator = { separator: string }
 
 export const checklistRawTaskIsSeparator = (
   task: ChecklistRaw['phases'][0]['tasks'][0],
-): task is ChecklistSeperator => (task as ChecklistSeperator).isSeparator !== undefined
+): task is ChecklistSeperator => (task as ChecklistSeperator).separator !== undefined
 
 export type ChecklistRaw = {
   name: string
@@ -13,6 +13,6 @@ export type ChecklistRaw = {
       description?: string
       status: string
       isDone?: boolean
-    } | { isSeparator: true })[]
+    } | { separator: string })[]
   }[]
 }

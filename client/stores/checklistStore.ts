@@ -1,16 +1,21 @@
 import { makeAutoObservable } from 'mobx'
 import { v4 as uuid } from 'uuid'
+import { Aircraft } from '../../models/Aircraft'
 import {
   ChecklistRaw,
   checklistRawTaskIsSeparator,
 } from '../../models/ChecklistRaw'
-import { airbus320ChecklistData } from '../data/airbus320ChecklistData'
+import data from '../data'
 
 export class ChecklistTask {
-  private _isSeparator = false
+  private _separator: string | undefined
+
+  get separator() {
+    return this._separator
+  }
 
   get isSeparator() {
-    return this._isSeparator
+    return this.separator !== undefined
   }
 
   private _id = uuid()
@@ -37,15 +42,22 @@ export class ChecklistTask {
     return this._isDone || false
   }
 
+  private _description: string | undefined
+
+  get description() {
+    return this._description
+  }
+
   constructor(rawTask: ChecklistRaw['phases'][0]['tasks'][0]) {
     makeAutoObservable(this)
 
     if (checklistRawTaskIsSeparator(rawTask)) {
-      this._isSeparator = true
+      this._separator = rawTask.separator
     } else {
       this._name = rawTask.name
       this._status = rawTask.status
       this._isDone = rawTask.isDone
+      this._description = rawTask.description
     }
   }
 
@@ -123,8 +135,13 @@ class ChecklistStore {
 
   constructor() {
     makeAutoObservable(this)
-    this._currentChecklist = new Checklist(airbus320ChecklistData)
+    this._currentChecklist = new Checklist(data.getRawChecklistFor('a320'))
     this._currentPhase = this.currentChecklist.phases[0]
+  }
+
+  loadChecklistFor(aircraft: Aircraft) {
+    this._currentChecklist = new Checklist(data.getRawChecklistFor(aircraft))
+    this.resetAll()
   }
 
   goToPhase(phase: ChecklistPhase) {

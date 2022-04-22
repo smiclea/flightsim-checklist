@@ -2,14 +2,14 @@
 
 ## Production Setup ##
 
-1. `NODE_MODE=production` or undefined
+1. `NODE_ENV=production` or undefined
 2. yarn install
 3. yarn build
 4. yarn start
 
 ## Development Setup ##
 
-1. `NODE_MODE=development`
+1. `NODE_ENV=development`
 2. yarn install
 3. yarn server-dev
 4. yarn client-dev
@@ -18,7 +18,7 @@
 
 ```(bash)
 PORT=3010
-NODE_MODE=production
+NODE_ENV=production
 ```
 
 For development, you should create a `.env` file to store all the environment variables above, they will be loaded when running `yarn start`.
@@ -26,7 +26,7 @@ For development, you should create a `.env` file to store all the environment va
 The `./server/env.ts` file holds the default values for each of these variables.
 
 - PORT: the port on which to run the node server
-- NODE_MODE: specify whether to configure the server for development or production
+- NODE_ENV: specify whether to configure the server for development or production
 
 ## Using VS Code for debugging ##
 
