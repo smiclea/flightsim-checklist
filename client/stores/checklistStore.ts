@@ -125,6 +125,14 @@ class ChecklistStore {
     return this._currentPhase
   }
 
+  get previousPhase(): ChecklistPhase | null {
+    const currentPhaseIdx = this.currentChecklist.phases.findIndex(p => p.name === this.currentPhase.name)
+    if (currentPhaseIdx > 0) {
+      return this.currentChecklist.phases[currentPhaseIdx - 1]
+    }
+    return null
+  }
+
   get nextPhase(): ChecklistPhase | null {
     const currentPhaseIdx = this.currentChecklist.phases.findIndex(p => p.name === this.currentPhase.name)
     if (currentPhaseIdx > -1 && currentPhaseIdx < this.currentChecklist.phases.length - 1) {

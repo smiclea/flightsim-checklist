@@ -22,8 +22,10 @@ export default observer(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handlePhaseChange = (phase: ChecklistPhase) => {
-    checklistStore.goToPhase(phase)
+  const handlePhaseChange = (phase: ChecklistPhase | null) => {
+    if (phase) {
+      checklistStore.goToPhase(phase)
+    }
   }
 
   const phaseIndex = checklistStore.currentChecklist.phases.findIndex(p => p.name === checklistStore.currentPhase.name)
@@ -44,6 +46,8 @@ export default observer(() => {
         >
           <ChecklistTablist checklist={checklistStore.currentChecklist} />
           <ChecklistPanels
+            hasPreviousPhase={checklistStore.previousPhase !== null}
+            onPreviousPhaseClick={() => { handlePhaseChange(checklistStore.previousPhase) }}
             checklist={checklistStore.currentChecklist}
             nextPhase={checklistStore.nextPhase}
             selectedPhase={checklistStore.currentPhase}
@@ -53,7 +57,6 @@ export default observer(() => {
             }}
             onTaskChange={(task, isChecked) => { checklistStore.toggleTask(task, isChecked) }}
             onResetAll={() => { checklistStore.resetAll() }}
-            onToggleTasks={(phase, areChecked) => { checklistStore.togglePhaseTasks(phase, areChecked) }}
           />
         </Tabs>
       </Flex>

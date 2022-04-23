@@ -10,23 +10,25 @@ type Props = {
   checklist: Checklist
   nextPhase: ChecklistPhase | null
   selectedPhase: ChecklistPhase
+  hasPreviousPhase: boolean
+  onPreviousPhaseClick: () => void
   onTaskChange: (task: ChecklistTask, isChecked: boolean) => void
   onNextPhaseClick: () => void
-  onToggleTasks: (phase: ChecklistPhase, areChecked: boolean) => void
   onResetAll: () => void
 }
 
 export default observer(({
   checklist,
   nextPhase,
+  hasPreviousPhase,
+  selectedPhase,
   onTaskChange,
   onNextPhaseClick,
-  selectedPhase,
-  onToggleTasks,
   onResetAll,
+  onPreviousPhaseClick,
 }: Props) => {
-  const areAllTasksForSelectedPhaseDone = selectedPhase.tasks.filter(t => !t.isSeparator).length === selectedPhase.tasks
-    .filter(t => !t.isSeparator && t.isDone).length
+  const areAllTasksForSelectedPhaseDone = selectedPhase.tasks.filter(t => !t.isSeparator).length
+    === selectedPhase.tasks.filter(t => !t.isSeparator && t.isDone).length
 
   return (
     <TabPanels
@@ -40,6 +42,16 @@ export default observer(({
         const percentage = (tasksDone / tasksTotal) * 100
         return (
           <TabPanel pt={0} key={phase.name}>
+            {hasPreviousPhase ? (
+              <Button
+                variant="outline"
+                mb={4}
+                width="170px"
+                onClick={onPreviousPhaseClick}
+                display={['block', 'block', 'none']}
+              >&lt; Previous Phase
+              </Button>
+            ) : null}
             <Flex direction="column">
               <Heading size="md" mb={4}>
                 <Box display={['inline', 'inline', 'none']} mr={2}>
@@ -51,21 +63,11 @@ export default observer(({
               </Heading>
               <ChecklistTasksList tasks={phase.tasks} onTaskChange={onTaskChange} />
               {nextPhase ? (
-                <Flex direction={['column', 'column', 'row']}>
-                  <Button
-                    colorScheme={areAllTasksForSelectedPhaseDone ? 'green' : undefined}
-                    onClick={onNextPhaseClick}
-                  >Next Phase: {nextPhase.name}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    width="115px"
-                    ml={[0, 0, 4]}
-                    mt={[4, 4, 0]}
-                    onClick={() => { onToggleTasks(phase, !areAllTasksForSelectedPhaseDone) }}
-                  >{areAllTasksForSelectedPhaseDone ? 'Reset' : 'Mark Done'}
-                  </Button>
-                </Flex>
+                <Button
+                  colorScheme={areAllTasksForSelectedPhaseDone ? 'green' : undefined}
+                  onClick={onNextPhaseClick}
+                >Next Phase: {nextPhase.name}
+                </Button>
               ) : (
                 <Button onClick={onResetAll}>Reset All</Button>
               )}
