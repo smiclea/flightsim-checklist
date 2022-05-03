@@ -1,1 +1,1 @@
-export type Aircraft = 'a320' | 'b737'
+export type Aircraft = 'a320' | 'b737' | 'md82'

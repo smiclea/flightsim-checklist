@@ -147,8 +147,8 @@ class ChecklistStore {
     this._currentPhase = this.currentChecklist.phases[0]
   }
 
-  loadChecklistFor(aircraft: Aircraft) {
-    this._currentChecklist = new Checklist(data.getRawChecklistFor(aircraft))
+  tryLoadChecklistFor(aircraftRaw: string) {
+    this._currentChecklist = new Checklist(data.getRawChecklistFor(aircraftRaw))
     this.resetAll()
   }
 

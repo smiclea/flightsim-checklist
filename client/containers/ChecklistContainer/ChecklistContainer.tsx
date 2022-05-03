@@ -3,7 +3,6 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { Aircraft } from '../../../models/Aircraft'
 import { ChecklistPhase } from '../../stores/checklistStore'
 import useStores from '../../stores/useStores'
 import ChecklistPanels from './modules/ChecklistPanels'
@@ -14,11 +13,7 @@ export default observer(() => {
 
   React.useEffect(() => {
     const airplanePath: string = window.location.pathname.substring(1)
-    let aircraft: Aircraft = 'a320'
-    if (airplanePath === 'b737') {
-      aircraft = 'b737'
-    }
-    checklistStore.loadChecklistFor(aircraft)
+    checklistStore.tryLoadChecklistFor(airplanePath)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
